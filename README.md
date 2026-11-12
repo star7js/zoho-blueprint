@@ -23,7 +23,7 @@ auth = RefreshTokenAuth(client_id, client_secret, refresh_token)  # refreshes ho
 zoho = BlueprintClient(auth)  # api_domain="https://www.zohoapis.eu" for other data centers
 
 state = zoho.get_state("Deals", deal_id)
-print(state.state)             # "Qualification"
+print(state.state)  # "Qualification"
 print(state.transition_names)  # ["Qualify", "Close Lost"]
 
 # Run one transition by name, with the fields it needs
@@ -31,7 +31,8 @@ zoho.execute("Deals", deal_id, "Qualify", {"Budget_Notes": "Confirmed"})
 
 # Or walk a record through several, the way a person would in the UI
 zoho.walk(
-    "Deals", deal_id,
+    "Deals",
+    deal_id,
     ["Qualify", "Send Proposal", "Close Won"],
     data={"Qualify": {"Budget_Notes": "Confirmed"}, "Close Won": {"Won_Date": "2026-03-05"}},
 )
