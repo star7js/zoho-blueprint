@@ -113,7 +113,8 @@ These are why this library exists.
 1. **Creating a record past the entry stage skips the Blueprint.** `POST /Deals` with `"Stage": "Closed Won"` succeeds, and the Deal sits in the Blueprint at Closed Won with none of the transitions' required fields, checks, date stamps or after-actions done. Updating Stage afterwards is refused with `RECORD_IN_BLUEPRINT`, so only creates are unguarded. Create records at the entry stage and use `walk()`.
 2. **Don't trust the GET's `mandatory` flags.** The fields Zoho returns for a transition can all report as not mandatory while executing it is refused with "mandatory param missing". `TransitionField.reported_mandatory` keeps what the GET said, under that name on purpose. Treat `MandatoryFieldsMissing` as the truth.
 3. **A partial save looks like a success.** If you send fewer fields than a transition needs, Zoho can answer `"transition saved partially"` with a success status ([docs](https://www.zoho.com/crm/developer/docs/api/v8/update-blueprint.html)). The record does not move. This library raises `PartialSave`.
-4. **One transition per request.** The update endpoint runs a single transition at a time, so multi-step moves are a sequence of calls; `walk()` re-reads the record between steps.
+4. **A record created through the API may not enter the Blueprint at all.** Zoho's [troubleshooting guide](https://help.zoho.com/portal/en/kb/crm/troubleshooting/articles/troubleshooting-blueprint) says to include the Blueprint trigger when creating records: `"trigger": ["approval", "workflow", "blueprint"]` in the request body. Without it, `get_state()` answers `RecordNotInProcess`.
+5. **One transition per request.** The update endpoint runs a single transition at a time, so multi-step moves are a sequence of calls; `walk()` re-reads the record between steps.
 
 Behavior observed on API v8 in 2026. If Zoho changes any of it, please open an issue.
 
