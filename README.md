@@ -2,7 +2,25 @@
 
 Run Zoho CRM Blueprint transitions properly from Python, and find the records that skipped them.
 
-Zoho CRM's [Blueprint API](https://www.zoho.com/crm/developer/docs/api/v8/blueprint-details.html) has a few behaviors that are easy to trip over: a record can be created straight into a later stage and skip the whole process, the API's own `mandatory` flags don't tell you what a transition really requires, and a transition that didn't happen can come back looking like a success. This library handles those and gives you clear errors when Zoho refuses.
+## The problem
+
+A [Blueprint](https://www.zoho.com/crm/tutorials/blueprint/overview.html) is how a Zoho CRM org enforces its sales process: each move from one stage to the next asks for the right fields, runs its checks, stamps its dates and fires its automations.
+
+But when code creates a Deal through the API, it can set the Stage straight to "Closed Won", and Zoho accepts it. The Deal lands at the end of the process with none of that done: no required fields, no checks, no dates, no automations. Nothing errors. Your reports are just quietly wrong, and from Closed Won only an admin can move the Deal back.
+
+Integrations, import scripts and AI agents that log deals do this all the time, because creating a record is the obvious API call and the Blueprint's own API makes doing it properly awkward:
+
+- it reports a transition's fields as optional, then refuses to run the transition without them;
+- a transition that didn't happen can come back as a success ("transition saved partially");
+- each step is a separate call, so moving a record through five stages is five rounds of looking up IDs and fields.
+
+## What this does
+
+- **`walk()`** moves a record through its transitions in order, the way a person clicking through Zoho would, so every check and automation runs.
+- **Clear errors** when Zoho refuses: which fields are missing, whether a save was only partial, which transitions are available from where the record is.
+- **`zoho-blueprint audit`** finds the Deals that were created past the start of the process, and which fields they're missing, so you can fix them.
+
+It's for developers and consultants who write to Zoho CRM from code: integrations, sync jobs, imports, voice or AI agents that log deals.
 
 > Unofficial. Not affiliated with or endorsed by Zoho Corporation.
 
