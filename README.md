@@ -8,7 +8,7 @@ A [Blueprint](https://www.zoho.com/crm/tutorials/blueprint/overview.html) is how
 
 But when code creates a Deal through the API, it can set the Stage straight to "Closed Won", and Zoho accepts it. The Deal lands at the end of the process with none of that done: no required fields, no checks, no dates, no automations. Nothing errors. Your reports are just quietly wrong, and from Closed Won only an admin can move the Deal back.
 
-Integrations, import scripts and AI agents that log deals do this all the time, because creating a record is the obvious API call and the Blueprint's own API makes doing it properly awkward:
+Integrations, import scripts and AI agents that log deals fall into this easily, because creating a record is the obvious API call and the Blueprint's own API makes doing it properly awkward:
 
 - it reports a transition's fields as optional, then refuses to run the transition without them;
 - a transition that didn't happen can come back as a success ("transition saved partially");
