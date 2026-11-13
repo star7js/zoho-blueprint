@@ -1,12 +1,15 @@
 name: publish
 
-# Publishes to PyPI when a version tag (v0.1.0, ...) is pushed. Uses PyPI
+# Publishes to PyPI when a version tag (v0.1.0, ...) is pushed, or a GitHub
+# Release is published (which creates its tag). Uses PyPI
 # trusted publishing, so no API token is stored: PyPI trusts this workflow
 # in the "pypi" environment of star7js/zoho-blueprint.
 
 on:
   push:
     tags: ["v*"]
+  release:
+    types: [published]
 
 jobs:
   build:
