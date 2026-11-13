@@ -44,3 +44,7 @@ jobs:
           name: dist
           path: dist/
       - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          # A Release made on GitHub's page fires both triggers above; the
+          # second run finds the files already there and passes.
+          skip-existing: true
