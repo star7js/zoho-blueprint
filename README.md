@@ -117,6 +117,14 @@ These are why this library exists.
 
 Behavior observed on API v8 in 2026. If Zoho changes any of it, please open an issue.
 
+## Limitations
+
+- **The audit covers Deals only.** It relies on the Deals Stage History, which other modules don't have.
+- **`walk()` follows the path you give it.** It doesn't work out a route between two states for you.
+- **Attachments and checklists** on transitions aren't handled yet; only field data is sent.
+- **Synchronous only**, built on `requests`.
+- **Zoho can change the API's behavior.** The quirks above were observed on API v8 in 2026.
+
 ## Scopes
 
 Reading state needs `ZohoCRM.modules.{module}.READ`; running transitions needs `ZohoCRM.modules.{module}.UPDATE` (or `ZohoCRM.modules.ALL`). The audit reads Deals and their Stage History.
