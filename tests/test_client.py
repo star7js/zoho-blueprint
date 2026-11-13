@@ -94,6 +94,36 @@ def test_missing_required_fields_raise_with_the_field_names(mocked, client, body
     assert "Decision_Maker" in str(raised.value)
 
 
+def test_refused_transition_lists_every_missing_field(mocked, client):
+    """The shape Zoho actually sends: the error inside a ``blueprint`` list,
+    with one ``validation_error`` entry per missing field."""
+    mocked.get(BP_URL, json=state_body("Qualification", [QUALIFY]))
+    mocked.put(
+        BP_URL,
+        status=400,
+        json={
+            "blueprint": [
+                {
+                    "code": "INVALID_DATA",
+                    "details": {
+                        "validation_error": [
+                            {"api_name": "Budget_Notes", "json_path": "$.blueprint[0].data"},
+                            {"api_name": "Decision_Maker", "json_path": "$.blueprint[0].data"},
+                        ]
+                    },
+                    "message": "mandatory param missing",
+                    "status": "error",
+                }
+            ]
+        },
+    )
+
+    with pytest.raises(MandatoryFieldsMissing) as raised:
+        client.execute("Deals", DEAL, "Qualify", {})
+
+    assert raised.value.fields == ["Budget_Notes", "Decision_Maker"]
+
+
 def test_partial_save_is_an_error_not_a_success(mocked, client):
     mocked.get(BP_URL, json=state_body("Qualification", [QUALIFY]))
     mocked.put(

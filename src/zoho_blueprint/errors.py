@@ -139,7 +139,16 @@ def _field_names(details: dict[str, Any]) -> list[str]:
             for item in value:
                 add(item)
 
-    for key in ("api_name", "api_names", "fields", "field", "missing_fields", "expected_data"):
+    keys = (
+        "validation_error",  # what a refused Blueprint PUT sends: [{"api_name": ...}, ...]
+        "api_name",
+        "api_names",
+        "fields",
+        "field",
+        "missing_fields",
+        "expected_data",
+    )
+    for key in keys:
         if key in details:
             add(details[key])
     return names
